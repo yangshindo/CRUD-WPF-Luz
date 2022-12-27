@@ -115,6 +115,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DB\IDatabase.cs" />
+    <Compile Include="DB\PostgreSQL.cs" />
     <Compile Include="UserRegistration.xaml.cs">
       <DependentUpon>UserRegistration.xaml</DependentUpon>
     </Compile>
@@ -154,7 +156,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DB\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
