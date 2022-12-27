@@ -9,25 +9,43 @@ namespace Aula_Fernando
 {
     public class User : INotifyPropertyChanged
     {
-
+        private int id;
+        private string cpf;
         private string name;
         private string email;
         private string password;
+        
 
         public User()
         {
 
         }
 
-        public User(string name, string email, string password)
+        public User(string cpf, string name, string email, string password, int id)
         {
+            this.cpf = cpf;
             this.name = name;
             this.email = email;
             this.password = password;
+            this.id = id;
         }
 
 
         // Definindo os métodos getters e setters de cada propriedade
+
+        public string CPF
+        {
+            get { return cpf; }
+            set
+            {
+                if (cpf != value)
+                {
+                    cpf = value;
+                    RaisePropertyChanged("CPF");
+                }
+            }
+        }
+
         public string Name
         {
             get { return name; }
@@ -66,6 +84,11 @@ namespace Aula_Fernando
                 }
             }
         }
+
+
+        public int Id
+        { get { return id; }}
+
 
         public User Clone()
         {

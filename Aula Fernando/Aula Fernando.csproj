@@ -103,7 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="CadastroUsuario.xaml">
+    <Page Include="UserRegistration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -115,8 +115,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CadastroUsuario.xaml.cs">
-      <DependentUpon>CadastroUsuario.xaml</DependentUpon>
+    <Compile Include="UserRegistration.xaml.cs">
+      <DependentUpon>UserRegistration.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindowsVM.cs" />
     <Compile Include="RelayCommand.cs" />

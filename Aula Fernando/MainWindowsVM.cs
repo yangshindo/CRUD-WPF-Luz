@@ -26,56 +26,85 @@ namespace Aula_Fernando
             return new NpgsqlConnection(@"Server=localhost;Port=5432;User Id=postgres;Password=1234;Database=WPFDB");
         }
 
-        private static void InsertRecord()
-        {
-            using(NpgsqlConnection con=GetConnection())
-            {
-                string query = @"insert into public.Users";
-            }
-        }
 
-        // Construtor
-        public MainWindowsVM()
+
+    // Construtor
+    public MainWindowsVM()
         {
             UsersList = new ObservableCollection<User>()
             {
 
             };
+            LoadDBList();
             IniciaComandos();
         }
 
+
+        public void LoadDBList()
+        {
+
+            try
+            {
+                using (NpgsqlConnection con = GetConnection())
+                {
+                    ObservableCollection<User> list = new ObservableCollection<User>();
+                    string query = $@"SELECT * FROM users";
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    con.Open();
+                    NpgsqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        User user = new User()
+                        {
+                            //(0) é a id, (1) é o created_at
+                            CPF = reader.GetString(2),
+                            Name = reader.GetString(3),
+                            Email = reader.GetString(4),
+                            Password = reader.GetString(5)
+                        };
+                        list.Add(user);
+                    }
+                    UsersList = list;
+                    con.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
 
         public void IniciaComandos()
         {
 
             Add = new RelayCommand((object _) =>
             {
-                User userCadastro = new User(); //novo usuário em branco
+                User newUser = new User(); //novo usuário em branco
 
-                CadastroUsuario tela = new CadastroUsuario();  //CadastroUsuario é uma tela mas também é uma classe
+                UserRegistration screen = new UserRegistration();  //CadastroUsuario é uma tela mas também é uma classe
 
-                tela.DataContext = userCadastro; //define o context da tela para salvar os dados digitados no usuário
+                screen.DataContext = newUser; //define o context da tela para salvar os dados digitados no usuário
 
        
-                bool? verifica = tela.ShowDialog();
-                if (verifica.HasValue && verifica.Value)
+                bool? verify = screen.ShowDialog();
+                if (verify.HasValue && verify.Value)
                 {
-                    UsersList.Add(userCadastro);
+                    UsersList.Add(newUser);
+
+                    //Integração DB
+
+                    using (NpgsqlConnection con = GetConnection())
+                    {
+                        string query = $@"INSERT INTO users (cpf, name, email, password) VALUES   ('{newUser.CPF}','{newUser.Name}','{newUser.Email}','{newUser.Password}')";
+                        NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
                 }
 
                 
-                using (NpgsqlConnection con = GetConnection())
-                {
-                    string query = @"insert into public.Users(Name,Email,Password)values("+userCadastro.Name+","+userCadastro.Email+","+userCadastro.Password+")";
-                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                    con.Open();
-                    int n = cmd.ExecuteNonQuery();
-                    if (n == 1)
-                    {
-                        Console.WriteLine("Record inserted");
-                    }
-
-                }
+                
                 
                 
 
@@ -87,7 +116,7 @@ namespace Aula_Fernando
                 if (SelectedUser != null) {
                     User usuario = SelectedUser.Clone();
 
-                    CadastroUsuario telaAtualizar = new CadastroUsuario();
+                    UserRegistration telaAtualizar = new UserRegistration();
 
                     telaAtualizar.DataContext = usuario;
 
@@ -98,15 +127,49 @@ namespace Aula_Fernando
                         SelectedUser.Name = usuario.Name;
                         SelectedUser.Email = usuario.Email;
                         SelectedUser.Password = usuario.Password;
+             
+
+
+                        //Integração DB
+
+                        using (NpgsqlConnection con = GetConnection())
+                        {
+                  
+                            string query = $@"UPDATE users SET name='{usuario.Name}',
+                                           email='{usuario.Email}',
+                                           password='{usuario.Password}'
+                                           WHERE cpf='{usuario.CPF}'";
+                            NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
                     }
                 }
                 
             }
             );
 
-            Remove = new RelayCommand((object _) => { UsersList.Remove(SelectedUser); }); // utiliza função remove no usuário selecionado (ItemSelected no ListView)
+            Remove = new RelayCommand((object _) => {
+
+                User TempUser = SelectedUser;
+                UsersList.Remove(SelectedUser);
 
 
+                //Integração DB
+
+                using (NpgsqlConnection con = GetConnection())
+                {
+                    string query = $@"DELETE FROM users WHERE cpf='{TempUser.CPF}'";
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+
+            }); 
+
+            
         }
 
 

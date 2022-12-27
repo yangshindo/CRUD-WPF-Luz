@@ -10,20 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Aula_Fernando
 {
     /// <summary>
-    /// Interação lógica para MainWindow.xam
+    /// Lógica interna para CadastroUsuario.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class UserRegistration : Window
     {
-        public MainWindow()
+        public UserRegistration()
         {
             InitializeComponent();
-            DataContext = new MainWindowsVM(); //ligando com o view model adequado
         }
+
+        public void ButtonSave(object sender, RoutedEventArgs e) => DialogResult = true;
     }
 }
