@@ -10,9 +10,9 @@
         <ListView ItemsSource="{Binding UsersList}" SelectedItem="{Binding SelectedUser}" HorizontalAlignment="Left" Height="186" Margin="150,10,0,0" VerticalAlignment="Top" Width="500" >
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding CPF}"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Email}"/>
+                    <GridViewColumn Header="CPF" DisplayMemberBinding="{Binding CPF}" Width="Auto"/>
+                    <GridViewColumn Header="Nome" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                    <GridViewColumn Header="E-mail" DisplayMemberBinding="{Binding Email}" Width="Auto"/>
                 </GridView>
             </ListView.View>
         </ListView>
