@@ -40,11 +40,11 @@ namespace Aula_Fernando
 
             Add = new RelayCommand((object _) =>
             {
-                User newUser = new User(); //novo usuário em branco
+                User newUser = new User(); 
 
-                UserRegistration screen = new UserRegistration();  //CadastroUsuario é uma tela mas também é uma classe
+                UserRegistration screen = new UserRegistration(); 
 
-                screen.DataContext = newUser; //define o context da tela para salvar os dados digitados no usuário
+                screen.DataContext = newUser; 
 
 
                 bool? verify = screen.ShowDialog();
@@ -78,8 +78,6 @@ namespace Aula_Fernando
                         SelectedUser.Email = usuario.Email;
                         SelectedUser.Password = usuario.Password;
 
-
-
                         connection.DB_EditUser(SelectedUser);
                     }
                 }
@@ -94,18 +92,6 @@ namespace Aula_Fernando
                 if (TempUser != null)
                 {
                     UsersList.Remove(SelectedUser);
-
-
-                    //Integração DB
-
-                    using (NpgsqlConnection con = GetConnection())
-                    {
-                        string query = $@"DELETE FROM users WHERE cpf='{TempUser.CPF}'";
-                        NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                    }
 
                     connection.DB_RemoveUser(TempUser);
 
