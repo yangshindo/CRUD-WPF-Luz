@@ -37,6 +37,13 @@ namespace Aula_Fernando.Models
             return regex.IsMatch(stringData);
         }
 
+        public static string RemoveWhitespace(string stringData)
+        {
+            return new string(stringData.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
+        }
+
 
         //Regras para CPF
         public bool CPFRules(string stringData)
@@ -56,6 +63,7 @@ namespace Aula_Fernando.Models
         //Regras para nome
         public bool NameRules(string stringData)
         {
+            stringData = RemoveWhitespace(stringData);
             if (stringData.Length < 5 || HasSpecialChars(stringData) || containsInt(stringData))
             {
                 MessageBox.Show("Favor inserir um nome válido.");

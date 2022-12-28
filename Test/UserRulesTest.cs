@@ -15,6 +15,8 @@ namespace Test
         
 
         [Theory]
+        [InlineData("RugzvagsyangzyXuxuBLZ")]
+        [InlineData("Mijaro Nomuro")]
         [InlineData("João Mário Bastos")]
         [InlineData("Pedro de Alcântara Francisco Antônio João Carlos Xavier de Paula Miguel Rafael Joaquim José Gonzaga Pascoal Cipriano Serafim de Bragança e Bourbon")]
         public void NameRules_ShouldValidateNameTRUE(string stringData)
@@ -30,6 +32,8 @@ namespace Test
         [Theory]
         [InlineData("J@cinto Leite Aquino Rego")]
         [InlineData("Jacinto L3ite Aquino Rego")]
+        [InlineData("Ab")]
+        [InlineData("123456")]
         public void NameRules_ShouldValidateNameFALSE(string stringData)
         {
             Rules = new UserRules();
