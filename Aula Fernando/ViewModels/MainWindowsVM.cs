@@ -1,8 +1,10 @@
 ﻿using Aula_Fernando.DB;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Aula_Fernando.Models;
 
 namespace Aula_Fernando
 {
@@ -20,17 +22,22 @@ namespace Aula_Fernando
 
         private IDatabase connection { get; set; }
 
+        public UserRules Rules { get; set; }
+
         // Construtor
         public MainWindowsVM()
         {
             connection = new PostgreSQL();
+            Rules = new UserRules();
             ObservableCollection<User> DBList = new ObservableCollection<User>(connection.LoadDBList());
             UsersList = DBList;
-            IniciaComandos();
+            InitCommands();
         }
 
+  
 
-        public void IniciaComandos()
+
+        public void InitCommands()
         {
 
             Add = new RelayCommand((object _) =>
@@ -47,8 +54,13 @@ namespace Aula_Fernando
                 {
                     try
                     {
-                        UsersList.Add(newUser);
-                        connection.DB_AddUser(newUser);
+                        if (Rules.CPFRules(newUser.CPF) && Rules.NameRules(newUser.Name) && Rules.EmailRules(newUser.Email) && Rules.PasswordRules(newUser.Password))
+                        {
+                            UsersList.Add(newUser);
+
+                            connection.DB_AddUser(newUser);
+                        }
+                        
                     }
                     catch (Exception e)
                     {

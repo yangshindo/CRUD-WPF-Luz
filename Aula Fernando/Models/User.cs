@@ -1,4 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Aula_Fernando
 {
@@ -9,12 +14,9 @@ namespace Aula_Fernando
         private string name;
         private string email;
         private string password;
+        
 
-
-        public User()
-        {
-
-        }
+        public User(){ }
 
         public User(string cpf, string name, string email, string password, int id)
         {
@@ -82,7 +84,7 @@ namespace Aula_Fernando
 
 
         public int Id
-        { get { return id; } }
+        { get { return id; }}
 
 
         public User Clone()

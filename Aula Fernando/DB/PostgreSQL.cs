@@ -9,7 +9,7 @@ namespace Aula_Fernando.DB
 
         private readonly string connectionString = @"Server=localhost;Port=5432;User Id=postgres;Password=1234;Database=WPFDB";
 
-        public NpgsqlConnection GetConnection()
+        private NpgsqlConnection GetConnection()
         {
             return new NpgsqlConnection(connectionString);
         }
