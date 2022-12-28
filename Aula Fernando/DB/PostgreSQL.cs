@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace Aula_Fernando.DB
 {
@@ -14,13 +14,13 @@ namespace Aula_Fernando.DB
             return new NpgsqlConnection(connectionString);
         }
 
-        public ObservableCollection<User> LoadDBList()
+        public List<User> LoadDBList()
         {
             try
             {
                 using (NpgsqlConnection con = GetConnection())
                 {
-                    ObservableCollection<User> list = new ObservableCollection<User>();
+                    List<User> list = new List<User>();
                     string query = $@"SELECT * FROM users";
                     NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                     con.Open();
@@ -43,47 +43,70 @@ namespace Aula_Fernando.DB
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
 
         public void DB_AddUser(User user)
         {
-            using (NpgsqlConnection con = GetConnection())
+            try
             {
-                string query = $@"INSERT INTO users (cpf, name, email, password) VALUES   ('{user.CPF}','{user.Name}','{user.Email}','{user.Password}')";
-                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                using (NpgsqlConnection con = GetConnection())
+                {
+                    string query = $@"INSERT INTO users (cpf, name, email, password) VALUES   ('{user.CPF}','{user.Name}','{user.Email}','{user.Password}')";
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+
         }
 
         public void DB_EditUser(User user)
         {
-            using (NpgsqlConnection con = GetConnection())
+            try
             {
+                using (NpgsqlConnection con = GetConnection())
+                {
 
-                string query = $@"UPDATE users SET name='{user.Name}',
+                    string query = $@"UPDATE users SET name='{user.Name}',
                                            email='{user.Email}',
                                            password='{user.Password}'
                                            WHERE cpf='{user.CPF}'";
-                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 
         public void DB_RemoveUser(User user)
         {
-            using (NpgsqlConnection con = GetConnection())
+            try
             {
-                string query = $@"DELETE FROM users WHERE cpf='{user.CPF}'";
-                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                using (NpgsqlConnection con = GetConnection())
+                {
+                    string query = $@"DELETE FROM users WHERE cpf='{user.CPF}'";
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

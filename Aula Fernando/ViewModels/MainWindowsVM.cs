@@ -1,15 +1,16 @@
 ﻿using Aula_Fernando.DB;
-using Npgsql;
+using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Aula_Fernando
 {
     public class MainWindowsVM
     {
-        public ObservableCollection<User> UsersList { get; set; } //variável para ser linkada ao objeto
+        public ObservableCollection<User> UsersList { get; set; }
 
-        public ICommand Add { get; set; } //comando adicionar (ICommand interface, RelayCommand class)
+        public ICommand Add { get; set; }
 
         public ICommand Remove { get; set; }
 
@@ -19,18 +20,12 @@ namespace Aula_Fernando
 
         private IDatabase connection { get; set; }
 
-        private static NpgsqlConnection GetConnection()
-        {
-            return new NpgsqlConnection(@"Server=localhost;Port=5432;User Id=postgres;Password=1234;Database=WPFDB");
-        }
-
-
-
         // Construtor
         public MainWindowsVM()
         {
             connection = new PostgreSQL();
-            UsersList = connection.LoadDBList();
+            ObservableCollection<User> DBList = new ObservableCollection<User>(connection.LoadDBList());
+            UsersList = DBList;
             IniciaComandos();
         }
 
@@ -40,19 +35,25 @@ namespace Aula_Fernando
 
             Add = new RelayCommand((object _) =>
             {
-                User newUser = new User(); 
+                User newUser = new User();
 
-                UserRegistration screen = new UserRegistration(); 
+                UserRegistration screen = new UserRegistration();
 
-                screen.DataContext = newUser; 
+                screen.DataContext = newUser;
 
 
                 bool? verify = screen.ShowDialog();
                 if (verify.HasValue && verify.Value)
                 {
-                    UsersList.Add(newUser);
-
-                    connection.DB_AddUser(newUser);
+                    try
+                    {
+                        UsersList.Add(newUser);
+                        connection.DB_AddUser(newUser);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Erro ao incluir um usuário. --> {e.Message}");
+                    }
                 }
 
             });
@@ -74,11 +75,18 @@ namespace Aula_Fernando
 
                     if (verifica.HasValue && verifica.Value)
                     {
-                        SelectedUser.Name = usuario.Name;
-                        SelectedUser.Email = usuario.Email;
-                        SelectedUser.Password = usuario.Password;
+                        try
+                        {
+                            SelectedUser.Name = usuario.Name;
+                            SelectedUser.Email = usuario.Email;
+                            SelectedUser.Password = usuario.Password;
 
-                        connection.DB_EditUser(SelectedUser);
+                            connection.DB_EditUser(SelectedUser);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show($"Erro ao editar um usuário. --> {e.Message}");
+                        }
                     }
                 }
 
@@ -91,10 +99,16 @@ namespace Aula_Fernando
                 User TempUser = SelectedUser;
                 if (TempUser != null)
                 {
-                    UsersList.Remove(SelectedUser);
+                    try
+                    {
+                        UsersList.Remove(SelectedUser);
 
-                    connection.DB_RemoveUser(TempUser);
-
+                        connection.DB_RemoveUser(TempUser);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Erro ao excluir um usuário. --> {e.Message}");
+                    }
 
                 }
 
