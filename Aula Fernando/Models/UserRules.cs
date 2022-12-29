@@ -77,7 +77,7 @@ namespace Aula_Fernando.Models
         //Regras para e-mail
         public bool EmailRules(string stringData)
         {
-            if (IsValidEmail(stringData) && stringData.Length < 50) {
+            if (IsValidEmail(stringData) && stringData.Length < 55) {
                 return true;
             } else
             {
